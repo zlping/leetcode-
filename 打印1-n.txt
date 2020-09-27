@@ -1,0 +1,51 @@
+输入数字 n，按顺序打印出从 1 到最大的 n 位十进制数。比如输入 3，则打印出 1、2、3 一直到最大的 3 位数 999。
+
+示例 1:
+
+输入: n = 1
+输出: [1,2,3,4,5,6,7,8,9]
+
+我：
+class Solution {
+    public int[] printNumbers(int n) {
+     
+        int end = (int)Math.pow(10, n);
+        int[] res = new int[end-1];
+        for(int i = 1; i < end; i++)
+            res[i-1] = i ;
+        return res;
+
+  实际应该考虑大数越界的问题：
+1. 表示大数的变量类型：
+无论是 short / int / long ... 任意变量类型，数字的取值范围都是有限的。因此，大数的表示应用字符串 String 类型
+2. 生成数字的字符串集：
+使用 int 类型时，每轮可通过 +1生成下个数字，而此方法无法应用至 String 类型。并且， String 类型的数字的进位操作效率较低，例如 "9999" 至 "10000" 需要从个位到千位循环判断，进位 4 次。
+观察可知，生成的列表实际上是 nn 位 00 - 99 的 全排列 ，因此可避开进位操作，通过递归生成数字的 String 列表
+3. 递归生成全排列：
+基于分治算法的思想，先固定高位，向低位递归，当个位已被固定时，添加数字的字符串。例如当 n = 2 时（数字范围 1 -99 ），固定十位为 0 - 9 ，按顺序依次开启递归，固定个位 0 - 9 ，终止递归并添加数字字符串。
+class Solution {
+    StringBuilder res;
+    int count = 0, n;
+    char[] num, loop = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+    public String printNumbers(int n) {
+        this.n = n;
+        res = new StringBuilder(); // 数字字符串集
+        num = new char[n]; // 定义长度为 n 的字符列表
+        dfs(0); // 开启全排列递归
+        res.deleteCharAt(res.length() - 1); // 删除最后多余的逗号
+        return res.toString(); // 转化为字符串并返回
+    }
+    void dfs(int x) {
+        if(x == n) { // 终止条件：已固定完所有位
+            res.append(String.valueOf(num) + ","); // 拼接 num 并添加至 res 尾部，使用逗号隔开
+            return;
+        }
+        for(char i : loop) { // 遍历 ‘0‘ - ’9‘
+            num[x] = i; // 固定第 x 位为 i
+            dfs(x + 1); // 开启固定第 x + 1 位
+        }
+    }
+}
+
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
