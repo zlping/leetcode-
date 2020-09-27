@@ -1,0 +1,47 @@
+实现函数double Power(double base, int exponent)，求base的exponent次方。不得使用库函数，同时不需要考虑大数问题。
+
+ 
+
+示例 1:
+
+输入: 2.00000, 10
+输出: 1024.00000
+
+我：class Solution {
+    public double myPow(double x, int n) {
+        if(n==0) return 1;
+        if(n==1) return x;
+        if(n == -1) return 1 / x;
+        double half = myPow(x, n / 2);
+        double mod = myPow(x, n % 2);
+        return half * half * mod;
+        
+    }
+}
+官方：
+方法1：
+二进制
+利用十进制数字 n 的二进制表示，可对快速幂进行数学化解释。
+n=1b1+2b2+4b3+...+2(m-1)bm
+
+方法2：
+二分法
+n为偶数，(x^2)^n/2
+n为奇数，x*(x^2)^n/2
+class Solution {
+    public double myPow(double x, int n) {
+        if(x == 0) return 0;
+        long b = n;
+        double res = 1.0;
+        if(b < 0) {
+            x = 1 / x;
+            b = -b;
+        }
+        while(b > 0) {
+            if((b & 1) == 1) res *= x;
+            x *= x;
+            b >>= 1;
+        }
+        return res;
+    }
+}
