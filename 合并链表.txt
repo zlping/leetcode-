@@ -1,0 +1,39 @@
+输入两个递增排序的链表，合并这两个链表并使新链表中的节点仍然是递增排序的。
+
+示例1：
+
+输入：1->2->4, 1->3->4
+输出：1->1->2->3->4->4
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode la=l1;
+        ListNode lb=l2;
+        ListNode newNode=new ListNode();
+        ListNode lc=newNode;
+        while(la!=null&&lb!=null){
+            if(la.val<=lb.val){
+                lc.next=la;
+                lc=lc.next;
+                la=la.next;
+            }
+            else{
+                lc.next=lb;
+                lc=lc.next;
+                lb=lb.next;
+            }
+                   
+        }
+        if(la!=null) lc.next=la;
+        else lc.next=lb;
+        return newNode.next;
+    }
+}
